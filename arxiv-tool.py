@@ -1,5 +1,6 @@
 # search papers using arXiv API
 import requests
+from langchain_core.tools import tool
 
 
 def parse_query(query: str) -> str:
@@ -104,4 +105,18 @@ def search_arxiv_papers(topic: str, max_results: int = 5) -> dict:
     return data
 
 
-print(search_arxiv_papers("Black Hole", 3))
+@tool
+def arxiv_tool(topic: str) -> list[dict]:
+    """
+    Docstring for arxiv_tool
+    
+    :param topic: The topic to search for
+    :type topic: str
+    :return: A list of dictionaries containing paper information
+    :rtype: list[dict]
+    """
+
+    papers = search_arxiv_papers(topic)
+    if not len(papers):
+        raise ValueError("No papers found for the given topic.")
+    return papers["entries"]
