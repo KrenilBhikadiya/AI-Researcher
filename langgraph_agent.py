@@ -99,28 +99,28 @@ from langchain_core.messages import SystemMessage, HumanMessage
 
 first_message = True
 
-while True:
-    user_input = input("User: ")
-    if user_input:
-        if first_message:
-            # Include system message only on first turn
-            print_stream(graph.stream(
-                {
-                    "messages": [
-                        SystemMessage(content=INITIAL_PROMPT),
-                        HumanMessage(content=user_input)
-                    ]
-                },
-                config={"configurable": config},
-                stream_mode="values"
-            ))
-            first_message = False
-        else:
-            # On subsequent turns, only send user message
-            print_stream(graph.stream(
-                {
-                    "messages": [HumanMessage(content=user_input)]
-                },
-                config={"configurable": config},
-                stream_mode="values"
-            ))
+# while True:
+#     user_input = input("User: ")
+#     if user_input:
+#         if first_message:
+#             # Include system message only on first turn
+#             print_stream(graph.stream(
+#                 {
+#                     "messages": [
+#                         SystemMessage(content=INITIAL_PROMPT),
+#                         HumanMessage(content=user_input)
+#                     ]
+#                 },
+#                 config={"configurable": config},
+#                 stream_mode="values"
+#             ))
+#             first_message = False
+#         else:
+#             # On subsequent turns, only send user message
+#             print_stream(graph.stream(
+#                 {
+#                     "messages": [HumanMessage(content=user_input)]
+#                 },
+#                 config={"configurable": config},
+#                 stream_mode="values"
+#             ))

@@ -46,22 +46,32 @@ def render_latex_pdf(latex_content: str) -> str:
         pdf_filename = f"paper_{timestamp}.pdf"
         # Step4: Export as tex & pdf
         tex_file = output_dir / tex_filename
-        tex_file.write_text(latex_content)
+        tex_file.write_text(latex_content, encoding='utf-8')
 
         result = subprocess.run(
                     ["tectonic", tex_filename, "--outdir", str(output_dir)],
                     cwd=output_dir,
                     capture_output=True,
                     text=True,
+                    encoding='utf-8'
                 )
+
+        # Check if compilation was successful
+        if result.returncode != 0:
+            error_msg = f"Tectonic compilation failed:\nSTDOUT:\n{result.stdout}\n\nSTDERR:\n{result.stderr}"
+            print(error_msg)
+            return f"Error: LaTeX compilation failed. Check the .tex file at {tex_file}"
 
         final_pdf = output_dir / pdf_filename
         if not final_pdf.exists():
-            raise FileNotFoundError("PDF file was not generated")
+            error_msg = f"PDF file was not generated.\nSTDOUT:\n{result.stdout}\n\nSTDERR:\n{result.stderr}"
+            print(error_msg)
+            return f"Error: PDF was not generated. Check the .tex file at {tex_file}"
 
         print(f"Successfully generated PDF at {final_pdf}")
         return str(final_pdf)
 
     except Exception as e:
-        print(f"Error rendering LaTeX: {str(e)}")
-        raise
+        error_msg = f"Error rendering LaTeX: {str(e)}"
+        print(error_msg)
+        return error_msg
